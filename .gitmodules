@@ -1,0 +1,12 @@
+[submodule "myvaex"]
+	path = myvaex
+	url = https://github.com/Yicorner/vaex.git
+	branch = stage2_train
+[submodule "mar"]
+	path = mar
+	url = https://github.com/LTH14/mar.git
+	branch = main
+[submodule "var"]
+	path = var
+	url = https://github.com/Yicorner/var-.git
+	branch = var_wo_quantize

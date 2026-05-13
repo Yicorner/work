@@ -1,0 +1,13 @@
+myenv/
+.cursor-server/
+.ipynb_checkpoints/
+.config/
+.ssh/
+brats_256_t2_2021_pair_png_with_ref_small/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+*.log
+*.tmp
+.vscode/

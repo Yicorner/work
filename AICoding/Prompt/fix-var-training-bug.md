@@ -1,3 +1,4 @@
+# round 1
 背景：我刚刚在服务端按照var\README.md (155-165) 训练了var，但是效果很不好，训练日志如下：
 var\local_output\stdout.txt (4360-4368)，我之所以说训练效果不好，是因为在对比重建图中（也就是var\local_output\cond_and_scale[0]_dont_depend_on_LR_VAE 文件夹里的对比图（从服务断拷贝到我现在本地）完全看不出有任何训练成功的样子，不是模糊，不是不精确，是根本就是一团无意义的噪声黑白（重建图中间那一列）。
 ep0000_it016799_comparison.png和ep0000_it000000_comparison.png几乎没什么区别
@@ -25,3 +26,18 @@ c15a13747f40f8caa88dc4e21a075be056f756a8
 [如有必要]改训练脚本和skill和readme，也请修改。
 
 我还想问一个问题，在刚刚你的回复中，什么叫做只采样 scale0 的图？采样是指？
+
+# round 3
+
+注意看
+var\local_output\stdout.txt @stdout.txt (4897-5019) 
+我按照你的说法增加了diagnostics之后又跑了var，命令如下
+var\README.md @README.md (185-201) 
+我发现diagnostics中的重建图的二三列都是相当模糊，完全看不出一点样子（iter8710）和（iter0）都是一样的黑白噪声。但是第四列oracle rec和原图接近。
+
+请帮我出谋划策一下我下一步应该怎么办。
+
+【我感觉我可能需要把 scale0 起点改成 LR-conditioned query，而不是纯 SOS 扩展。例如从 low_f 通过轻量 projection/downsample 得到 [B, 16, D] 的 scale0 query，再加 pos_start。这比当前 sos.expand(B,16,D)+pos_start 更合理，只是个例子，我对深度学习理解肯定没你深刻，如果你有更好的办法，那就用你的，如果暂时不需要改，也请说明理由。】
+我的理由如下，如今16个token都是一模一样（只有pos不一样），那么它们经过transform block 之后的输出几乎也是一摸一样的（因为qkv都一样），也就是说@SRVAR.py (768-796) 这里的输出几乎也是一摸一样的。
+而target 4*4，明显是不一样的。我个人认为这明显是不合理的。
+

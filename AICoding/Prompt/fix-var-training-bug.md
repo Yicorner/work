@@ -58,4 +58,10 @@ var\README.md @README.md (185-201)
 1.刚跟你说 loss 已经不能证明采样链正常，反向 diffusion 在高噪声 timestep 仍会把 latent 放大到 decoder 饱和区。这句话是什么意思？能不能详细给我解释解释。
 2.BS=64 AC=16这个参数是必要的吗？会不会拖慢训练进度？
 
+# round 6
+按照你刚刚的fix，我重新跑了很久的实验，日志如下：var\local_output\stdout.txt（？-8051）
+我发现即使跑了很久，跑了快三个epoch了，仍然根本没有在scale0的diagnostics重建图中看到任何有效信息，依旧是无规律的黑白噪声，和ep0-iter0一模一样。（我非常确信） 参数是按照你刚刚的参数跑的。
+重建图和metadata.json保存在var\local_output\srvar_scale0_lrq_equal_loss_fix_grad_bug
 
+会不会是我的网络结构本身就有问题，不好训练？
+请再次帮我分析各种原因，我明白这是一个困难的问题，不是轻易的可以找到答案，但是我希望你能够认真的思考，思考如何解决我的这个问题。如果问题在diffloss，diffloss暂时不好用，也可以暂时用其他更方便的方法代替，或者帮我改进diffloss

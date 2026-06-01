@@ -14,3 +14,4 @@ __pycache__/
 
 vaex/
 myenv.tar.gz
+tmp/

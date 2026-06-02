@@ -1,0 +1,48 @@
+---
+description: 任务完成且产生代码/配置变更后，在回复末尾给出英文 commit 建议（标题 + 可选正文），供用户自行 git commit；不代替用户执行 commit。
+alwaysApply: true
+---
+
+# 任务结束后的 Commit 文案建议
+
+## 触发时机
+
+- 本轮对话中**实际修改或新增了**仓库内文件（代码、配置、文档、脚本等），并在任务收尾时给出总结。
+- 若仅为答疑、阅读代码、方案讨论，**未产生任何文件变更**，则不需要输出 commit 建议。
+
+## 必须做的事（类似 post-task hook）
+
+在任务完成的**最后一段**，单独增加一个小节 **「Suggested commit」**，用英文写出本次变更适合的 commit 文案，方便用户复制后自行提交。
+
+**不要**在本规则下自动执行 `git add` / `git commit`，除非用户在当轮对话里明确要求提交。
+
+## 文案格式
+
+优先使用 **Conventional Commits** 风格的一行标题，例如：
+
+- `fix(trainer): align per-scale diagnostic with LR_256 path`
+- `feat(var): add multiscale reconstruction dump at log_iters`
+
+需要补充上下文时，在标题下空一行，写 1–3 句英文正文（说明 why，而非逐文件罗列 what）。
+
+## 写作要求
+
+- **语言**：标题与正文均用英文；若用户在总结中用中文，commit 建议仍用英文。
+- **聚焦 why**：说明解决了什么问题、行为有何变化，避免只堆文件名。
+- **与 diff 一致**：建议内容必须对应当轮真实改动；无变更则不编造 commit。
+- **简洁**：标题尽量 ≤ 72 字符；正文可选，只在必要时写。
+- **风格**：可参考该仓库近期 `git log` 的用词与粒度；无历史时可采用 conventional commits。
+
+## 输出模板
+
+在回复末尾使用如下结构（便于复制）：
+
+```text
+Suggested commit:
+
+<one-line subject>
+
+<optional body>
+```
+
+若变更可拆成多个独立 commit，可给出 2–3 条备选，并简短注明各自适用场景。

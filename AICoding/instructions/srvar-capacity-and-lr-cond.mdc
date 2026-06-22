@@ -1,0 +1,21 @@
+---
+description: 修改 var/SRVAR 容量、LR condition 来源、stage3 context 语义时，必须同步 CLI、SRtrain.sh、checkpoint config 与 AICoding skills，避免训练命令和真实模型结构脱节。
+alwaysApply: true
+---
+
+# SRVAR 容量与 LR Condition 修改约束
+
+当任务涉及 `var/models/SRVAR.py` 的 transformer 容量或 `lr_cond_source` 时，按下面清单同步：
+
+- CLI 参数定义：更新 `var/utils/arg_util.py`。
+- 构造传参：更新 `var/models/__init__.py::build_vae_srvar`。
+- 启动期校验：更新 `var/SRtrain.py`，尤其是 `embed_dim % heads`、`depth % block_chunks`、合法 `lr_cond_source`。
+- shell 入口：若 `var/SRtrain.sh` 支持同类参数，补环境变量和命令行展开。
+- checkpoint config：更新 `var/SRtrainer.py::get_config`，让结构变化在 resume 时可见。
+- skill 文档：更新 `var/AICoding/skills/architecture`、`training-operations`，必要时更新 `lr-data-conventions`。
+
+重要语义：
+
+- `stage3_context_mode=both` 表示 cross-attn KV 来自 `stage3_s0`，此时 SRVAR 本地 LR encoder 或 `learned_lr_encoder` 不参与 KV。
+- 要让 stage3 只提供 scale0 prefix、cross-attn 使用 LR encoder，必须设置 `stage3_context_mode=prefix_only`。
+- 改 `gpt_embed_dim`、`gpt_depth`、`gpt_num_heads` 通常不能完整 resume 旧结构 checkpoint；除非实现专门的 partial warm-start，否则使用新 BED 从头训练。
